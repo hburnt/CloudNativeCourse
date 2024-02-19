@@ -1,3 +1,23 @@
+/*
+*
+ * Coded by: Hunter Burnett
+ * ECGR 5109 | Cloud Native Application Architecture
+ *
+ * Program Description: Creates a database that can be accessed using a separate bash terminal
+ * To run the program type "go run webserver.go" in a terminal
+ * by typing: curl "http://localhost:8000" in a separate terminal you can read an write to the database using the defined functions as follows:
+ *
+ * ||======================================================================================================================||
+ * || "http://localhost:8000/list" reads the whole database                                                                ||
+ * || "http://localhost:8000/price?item=(item name)" if a valid item name is input it will read the price                  ||
+ * || "http://localhost:8000/update?item=(item name)&price=(price amount)" will change the item's price                    ||
+ * || "http://localhost:8000/create?item=(item name)&price=(price amount)" will create a new item with the specified price ||
+ * || "http://localhost:8000/read" will read the whole database                                                            ||
+ * || "http://localhost:8000/delete?item=(item name)" will delete the specified item from the database                     ||
+ * ||======================================================================================================================||
+ *
+*/
+
 package main
 
 import (
@@ -9,8 +29,10 @@ import (
 )
 
 func main() {
+	// nitializing the Database with two items
 	db := database{data: map[string]dollars{"shoes": 50, "socks": 5}}
 	mux := http.NewServeMux()
+	// Already Defined Handlers
 	mux.HandleFunc("/list", db.list)
 	mux.HandleFunc("/price", db.price)
 
@@ -26,12 +48,13 @@ type dollars float32
 
 func (d dollars) String() string { return fmt.Sprintf("$%.2f", d) }
 
+// Creating the database as a struct so we can use the RWMutex package
 type database struct {
 	data map[string]dollars
 	mu   sync.RWMutex
 }
 
-// Prind out the entire database
+// Print out the entire database
 func (db *database) list(w http.ResponseWriter, req *http.Request) {
 
 	//Lock Before Reading
@@ -45,9 +68,12 @@ func (db *database) list(w http.ResponseWriter, req *http.Request) {
 // Retrieve the price of an item in the database
 func (db *database) price(w http.ResponseWriter, req *http.Request) {
 	/*
-	 * Retrieve the item name from the url
-	 * Make sure the item is in the database
-	 * Print out the item's price
+	 * || Description ||
+	 * ||========================================||
+	 * || -Retrieve the item name from the url   ||
+	 * || -Make sure the item is in the database ||
+	 * || -Print out the item's price            ||
+	 * ||========================================||
 	 */
 	item := req.URL.Query().Get("item")
 
@@ -69,11 +95,14 @@ func (db *database) price(w http.ResponseWriter, req *http.Request) {
 func (db *database) update(w http.ResponseWriter, req *http.Request) {
 
 	/*
-	 * Retrieve the item name from the url
-	 * Retrieve the new price from the url
-	 * Make sure the item is in the database
-	 * Make sure the new price is valid
-	 * Update the price of the item in the database
+	 * ||Description||
+	 * ||===============================================||
+	 * || -Retrieve the item name from the url          ||
+	 * || -Retrieve the new price from the url          ||
+	 * || -Make sure the item is in the database        ||
+	 * || -Make sure the new price is valid             ||
+	 * || -Update the price of the item in the database ||
+	 * ||===============================================||
 	 */
 
 	item := req.URL.Query().Get("item")
@@ -109,9 +138,12 @@ func (db *database) update(w http.ResponseWriter, req *http.Request) {
 func (db *database) create(w http.ResponseWriter, req *http.Request) {
 
 	/*
-	 * Retrieve the item name from the url
-	 * Retrieve the price from the url
-	 * Add the new item and price of the item to the database
+	 * ||Description ||
+	 * ||=========================================================||
+	 * || -Retrieve the item name from the url                    ||
+	 * || -Retrieve the price from the url                        ||
+	 * || -Add the new item and price of the item to the database ||
+	 * ||=========================================================||
 	 */
 
 	item := req.URL.Query().Get("item")
@@ -141,9 +173,12 @@ func (db *database) read(w http.ResponseWriter, req *http.Request) {
 func (db *database) delete(w http.ResponseWriter, req *http.Request) {
 
 	/*
-	 * Retrieve the item name from the url
-	 * Make sure the item is actually in the database
-	 * Delete the item from the database
+	 * || Description ||
+	 * ||=================================================||
+	 * || -Retrieve the item name from the url            ||
+	 * || -Make sure the item is actually in the database ||
+	 * || -Delete the item from the database              ||
+	 * ||=================================================||
 	 */
 
 	item := req.URL.Query().Get("item")
