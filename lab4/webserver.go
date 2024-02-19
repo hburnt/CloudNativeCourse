@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func main() {
@@ -11,6 +12,8 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/list", db.list)
 	mux.HandleFunc("/price", db.price)
+	mux.HandleFunc("/update", db.update)
+	mux.HandleFunc("/create", db.create)
 	log.Fatal(http.ListenAndServe("localhost:8000", mux))
 }
 
@@ -34,4 +37,25 @@ func (db database) price(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusNotFound) // 404
 		fmt.Fprintf(w, "no such item: %q\n", item)
 	}
+}
+
+func (db database) update(w http.ResponseWriter, req *http.Request) {
+	item := req.URL.Query().Get("item")
+	newPrice := req.URL.Query().Get("price")
+	Price, _ := strconv.ParseFloat(newPrice, 32)
+
+	if _, ok := db[item]; ok {
+		db[item] = dollars(Price)
+	} else {
+		w.WriteHeader(http.StatusNotFound) // 404
+		fmt.Fprintf(w, "no such item: %q\n", item)
+	}
+}
+
+func (db database) create(w http.ResponseWriter, req *http.Request) {
+	item := req.URL.Query().Get("item")
+	newPrice := req.URL.Query().Get("price")
+	price, _ := strconv.ParseFloat(newPrice, 32)
+
+	db[item] = dollars(price)
 }
