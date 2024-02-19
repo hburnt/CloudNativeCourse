@@ -67,6 +67,7 @@ func (db *database) price(w http.ResponseWriter, req *http.Request) {
 
 // Update an item's price in the database
 func (db *database) update(w http.ResponseWriter, req *http.Request) {
+
 	/*
 	 * Retrieve the item name from the url
 	 * Retrieve the new price from the url
@@ -74,6 +75,7 @@ func (db *database) update(w http.ResponseWriter, req *http.Request) {
 	 * Make sure the new price is valid
 	 * Update the price of the item in the database
 	 */
+
 	item := req.URL.Query().Get("item")
 	updatedPrice := req.URL.Query().Get("price")
 
@@ -105,6 +107,7 @@ func (db *database) update(w http.ResponseWriter, req *http.Request) {
 
 // Creates a new item and price in the database
 func (db *database) create(w http.ResponseWriter, req *http.Request) {
+
 	/*
 	 * Retrieve the item name from the url
 	 * Retrieve the price from the url
@@ -136,6 +139,7 @@ func (db *database) read(w http.ResponseWriter, req *http.Request) {
 
 // Deletes and item from the database
 func (db *database) delete(w http.ResponseWriter, req *http.Request) {
+
 	/*
 	 * Retrieve the item name from the url
 	 * Make sure the item is actually in the database
