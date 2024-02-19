@@ -29,7 +29,7 @@ import (
 )
 
 func main() {
-	// nitializing the Database with two items
+	// Itializing the Database with two items
 	db := database{data: map[string]dollars{"shoes": 50, "socks": 5}}
 	mux := http.NewServeMux()
 	// Already Defined Handlers
