@@ -1,5 +1,5 @@
 /*
-*
+ *
  * Coded by: Hunter Burnett
  * ECGR 5109 | Cloud Native Application Architecture
  *
@@ -16,7 +16,7 @@
  * || "http://localhost:8000/delete?item=(item name)" will delete the specified item from the database                     ||
  * ||======================================================================================================================||
  *
-*/
+ */
 
 package main
 
