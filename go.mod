@@ -1,3 +1,3 @@
-module github.com/hburnt/CloudNativeCourse.git
+module github.com/hburnt/CloudNativeCourse
 
 go 1.22.0
