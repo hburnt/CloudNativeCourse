@@ -80,7 +80,7 @@ func (db *database) price(w http.ResponseWriter, req *http.Request) {
 	// Lock for reading
 	db.mu.RLock()
 	price, ok := db.data[item]
-	db.mu.Unlock()
+	db.mu.RUnlock()
 
 	if !ok {
 		w.WriteHeader(http.StatusNotFound) // 404
@@ -115,6 +115,7 @@ func (db *database) update(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "'%s' is not a valid price, please try again.\n", updatedPrice)
 		return
 	}
+
 	//Lock for reading
 	db.mu.RLock()
 	_, ok := db.data[item]
@@ -156,6 +157,7 @@ func (db *database) create(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "'%s' is not a valid price, please try again.\n", PRICE)
 		return
 	}
+
 	// Lock for writing
 	db.mu.Lock()
 	db.data[item] = dollars(price)
