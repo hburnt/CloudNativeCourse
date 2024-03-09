@@ -20,6 +20,9 @@ func TestParseResponse(t *testing.T) {
 	want := Conditions{
 		Summary:     "Clouds",
 		Temperature: 281.33,
+		Pressure:    1000,
+		Humidity:    90,
+		Speed:       3.09,
 	}
 	got, err := ParseResponse(data)
 	if err != nil {
@@ -108,6 +111,9 @@ func TestGetWeather(t *testing.T) {
 	want := Conditions{
 		Summary:     "Clouds",
 		Temperature: 281.33,
+		Pressure:    1000,
+		Humidity:    90,
+		Speed:       3.09,
 	}
 	got, err := c.GetWeather("Paris,FR")
 	if err != nil {
@@ -123,6 +129,16 @@ func TestFahrenheit(t *testing.T) {
 	input := Temperature(274.15)
 	want := 33.8
 	got := input.Fahrenheit()
+	if !cmp.Equal(want, got) {
+		t.Error(cmp.Diff(want, got))
+	}
+}
+
+func TestMilesPerHour(t *testing.T) {
+	t.Parallel()
+	input := Speed(3.09)
+	want := 3.09 * 2.23694
+	got := input.milesPerHour()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
 	}

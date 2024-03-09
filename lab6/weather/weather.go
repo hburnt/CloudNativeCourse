@@ -11,13 +11,13 @@ import (
 )
 
 type Temperature float64
-type Pressure float64
-type Humidity float64
+type Pressure int64
+type Humidity uint32
 type Speed float64
 
 // Converts the wind speed from m/s to mph
 func (s Speed) milesPerHour() float64 {
-	return (float64(s) * 2.2369)
+	return float64(s) * 2.23694
 }
 func (t Temperature) Fahrenheit() float64 {
 	return (float64(t)-273.15)*(9.0/5.0) + 32.0
@@ -136,6 +136,6 @@ func RunCLI() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	fmt.Printf("%s %.1fº %.2fhPa %.2fpercent %.2fmph\n", conditions.Summary, conditions.Temperature.Fahrenheit(), conditions.Pressure, conditions.Humidity, conditions.Speed.milesPerHour())
+	fmt.Printf("%s %.1fº %dhPa %d %.2fmph\n", conditions.Summary, conditions.Temperature.Fahrenheit(), conditions.Pressure, conditions.Humidity, conditions.Speed.milesPerHour())
 
 }
