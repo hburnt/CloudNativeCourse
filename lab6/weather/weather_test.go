@@ -20,9 +20,10 @@ func TestParseResponse(t *testing.T) {
 	want := Conditions{
 		Summary:     "Clouds",
 		Temperature: 281.33,
-		Pressure:    1000,
-		Humidity:    90,
-		Speed:       3.09,
+		//Added these to test the newly implimented data
+		Pressure: 1000,
+		Humidity: 90,
+		Speed:    3.09,
 	}
 	got, err := ParseResponse(data)
 	if err != nil {
