@@ -47,6 +47,10 @@ func (s *server) GetMovieInfo(ctx context.Context, in *movieapi.MovieRequest) (*
 
 }
 
+func (s *server) SetMovieData(ctx context.Context, in *movieapi.MovieData) (*movieapi.Status, error){
+  moviedb[data.Title] = string[]{strconv.Itoa(int(data.Year)), data.Director, strings.Join(data.Cast, ","))}
+}
+
 func main() {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {

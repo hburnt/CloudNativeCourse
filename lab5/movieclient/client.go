@@ -19,9 +19,6 @@ const (
 func main() {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
 	defer conn.Close()
 	c := movieapi.NewMovieInfoClient(conn)
 
@@ -38,4 +35,12 @@ func main() {
 		log.Fatalf("could not get movie info: %v", err)
 	}
 	log.Printf("Movie Info for %s %d %s %v", title, r.GetYear(), r.GetDirector(), r.GetCast())
+
+  req, err := c.SetMovieInfo(ctx, &movieapi.MovieData{Title: "Iron Man", Year: 2008, Director: "Jon Favreau", Cast: []string{"Robert Downey Jr.", "Jon Favreau", "Jeff Bridges"}})
+
+  if err != nil {
+    log.Fatalf("Could not set movie info: %w", err)
+  }
+ 
+log.Printf("Set movie info: %s", req.GetCode())
 }

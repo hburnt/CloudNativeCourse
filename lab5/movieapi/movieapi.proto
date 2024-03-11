@@ -8,6 +8,7 @@ package movieapi;
 service MovieInfo {
 	// Sends a requeest for movie info
 	rpc GetMovieInfo (MovieRequest) returns (MovieReply) {}
+  rpc SetMovieInfo (MovieData) returns (Status) {}
 }
 
 // The request message containing movie name
@@ -15,11 +16,21 @@ message MovieRequest {
 	string title = 1;
 }
 
+message Status {
+  string code = 1;
+}
 // The response message containining movie info
 message MovieReply {
 	int32 year = 1;
 	string director = 2;
 	repeated string cast = 3;
 	
+}
+
+message MovieData{
+  string title = 1;
+  int32 year = 2;
+  string director = 3;
+  repeated string cast = 4;
 }
 
