@@ -7,7 +7,6 @@ import (
   //  "go.mongodb.org/mongo-driver/bson"
     "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/mongo/options"
-    "github.com/hburnt/mypantry-API/recipeapi"
     "github.com/hburnt/mypantry-API/recipeinfoapi"
 )
 
@@ -23,39 +22,28 @@ func main() {
     defer client.Disconnect(context.Background())
 
     // Access a MongoDB collection
-    collection := client.Database("MyPantryDB").Collection("recipes")
+    collection := client.Database("MyPantryDB").Collection("recipe_info")
 
     // Get API key from environment variable
 	  apiKey := os.Getenv("SPOONACULAR_API_KEY")
 
     // Create a client with API key
-    apiClient := recipeapi.NewClient(apiKey)
+    apiClient := recipeinfoapi.NewClient(apiKey)
 
     // Query input
-    query := "pasta"
     recipeID := 654959 
     // Make API call to get recipe
-    recipe, err := apiClient.GetRecipe(query)
+    recipe_info, err := apiClient.GetRecipeInfo(recipeID)
     if err != nil {
-        log.println("error:", err)
+        log.Println("error:", err)
         return
     }
 
     // Insert recipe into the database
-    _, err = collection.InsertOne(context.Background(), recipe)
+    _, err = collection.InsertOne(context.Background(), recipe_info)
     if err != nil {
         log.Fatal(err)
     }
 
-    collection := client.Database("MyPantryDB").Collection("recipe_info")
-    recipe_info, err := apiClient.GetRecipeInfo(recipeID)
-    if err != nil {
-        log.println("error:", err)
-        return
-    }
-    _, err = collection.InsertOne(context.Background(), recipe_info)
-    if err != nil {
-      log.Fatal(err)
-     }
     log.Println("Recipe inserted successfully.")
 }

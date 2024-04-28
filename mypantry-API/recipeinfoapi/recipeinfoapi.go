@@ -10,9 +10,15 @@ import (
 )
 
 type Ingredient struct {
-	ID     int     `json:"id"`
-	Name   string  `json:"name"`
-	Amount float64 `json:"amount"`
+    ID     int     `json:"id"`
+    Name   string  `json:"name"`
+    Amount float64 `json:"amount"`
+    Unit   string  `json:"unit"`
+    USMeasure struct {
+        Amount   float64 `json:"amount"`
+        UnitLong string  `json:"unitLong"`
+        UnitShort string  `json:"unitShort"`
+    } `json:"measures"`
 }
 
 type RecipeID int64
@@ -56,7 +62,7 @@ func (c *Client) FormatRecipeInfoURL(recipeID int) string {
 	return fmt.Sprintf("%s/recipes/%d/information?includeNutrition=false&apiKey=%s", c.BaseURL, recipeID, c.APIKey)
 }
 
-func (c *Client) GetRecipe(recipeID int) (RecipeInfo, error) {
+func (c *Client) GetRecipeInfo(recipeID int) (RecipeInfo, error) {
 	URL := c.FormatRecipeInfoURL(recipeID)
 	resp, err := c.HTTPClient.Get(URL)
 	if err != nil {
@@ -81,26 +87,37 @@ func (c *Client) GetRecipe(recipeID int) (RecipeInfo, error) {
 }
 
 func parseRecipeInfoResponse(data []byte) (RecipeInfo, error) {
-	var resp SpoonRecipeResponse
-	err := json.Unmarshal(data, &resp)
-	if err != nil {
-		return RecipeInfo{}, fmt.Errorf("invalid API response %s: %w", data, err)
-	}
+    var resp SpoonRecipeResponse
+    err := json.Unmarshal(data, &resp)
+    if err != nil {
+        return RecipeInfo{}, fmt.Errorf("invalid API response %s: %w", data, err)
+    }
 
-	ingredients := make([]Ingredient, len(resp.Ingredients))
-	for i, ing := range resp.Ingredients {
-		ingredient := Ingredient{
-			ID:     ing.ID,
-			Name:   ing.Name,
-			Amount: ing.Amount,
-		}
-		ingredients[i] = ingredient
-	}
+    ingredients := make([]Ingredient, len(resp.Ingredients))
+    for i, ing := range resp.Ingredients {
+        ingredient := Ingredient{
+            ID:     ing.ID,
+            Name:   ing.Name,
+            Amount: ing.Amount,
+            Unit:   ing.Unit,
+            USMeasure: struct {
+                Amount   float64
+                UnitLong string
+                UnitShort string
+            }{
+                Amount:   ing.Measures.US.Amount,
+                UnitLong: ing.Measures.US.UnitLong,
+                UnitShort: ing.Measures.US.UnitShort,
+            },
+        }
+        ingredients[i] = ingredient
+    }
 
-	info := RecipeInfo{
-		ID:          resp.ID,
-		Title:       resp.Title,
-		Ingredients: ingredients,
-	}
-	return info, nil
+    info := RecipeInfo{
+        ID:          resp.ID,
+        Title:       resp.Title,
+        Ingredients: ingredients,
+    }
+    return info, nil
 }
+
