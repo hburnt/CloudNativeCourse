@@ -1,19 +1,18 @@
 package recipeinfoapi
 
 import (
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-//	"net/url"
-	"time"
+    "encoding/json"
+    "fmt"
+    "io"
+    "net/http"
+    "time"
 )
 
 type Ingredient struct {
-    ID     int     `json:"id"`
-    Name   string  `json:"name"`
-    Amount float64 `json:"amount"`
-    Unit   string  `json:"unit"`
+    ID        int     `json:"id"`
+    Name      string  `json:"name"`
+    Amount    float64 `json:"amount"`
+    Unit      string  `json:"unit"`
     USMeasure struct {
         Amount   float64 `json:"amount"`
         UnitLong string  `json:"unitLong"`
@@ -24,66 +23,66 @@ type Ingredient struct {
 type RecipeID int64
 
 type Recipe struct {
-	ID          int          `json:"id"`
-	Title       string       `json:"title"`
-	Image       string       `json:"image"`
-	Ingredients []Ingredient `json:"extendedIngredients"`
+    ID          int          `json:"id"`
+    Title       string       `json:"title"`
+    Image       string       `json:"image"`
+    Ingredients []Ingredient `json:"extendedIngredients"`
 }
 
 type RecipeInfo struct {
-	ID          int
-	Title       string
-	Ingredients []Ingredient
+    ID          int
+    Title       string
+    Ingredients []Ingredient
 }
 
 type SpoonRecipeResponse struct {
-	ID          int          `json:"id"`
-	Title       string       `json:"title"`
-	Ingredients []Ingredient `json:"extendedIngredients"`
+    ID          int          `json:"id"`
+    Title       string       `json:"title"`
+    Ingredients []Ingredient `json:"extendedIngredients"`
 }
 
 type Client struct {
-	APIKey     string
-	BaseURL    string
-	HTTPClient *http.Client
+    APIKey     string
+    BaseURL    string
+    HTTPClient *http.Client
 }
 
 func NewClient(key string) *Client {
-	return &Client{
-		APIKey: key,
-		BaseURL: "https://api.spoonacular.com",
-		HTTPClient: &http.Client{
-			Timeout: 10 * time.Second,
-		},
-	}
+    return &Client{
+        APIKey: key,
+        BaseURL: "https://api.spoonacular.com",
+        HTTPClient: &http.Client{
+            Timeout: 10 * time.Second,
+        },
+    }
 }
 
 func (c *Client) FormatRecipeInfoURL(recipeID int) string {
-	return fmt.Sprintf("%s/recipes/%d/information?includeNutrition=false&apiKey=%s", c.BaseURL, recipeID, c.APIKey)
+    return fmt.Sprintf("%s/recipes/%d/information?includeNutrition=false&apiKey=%s", c.BaseURL, recipeID, c.APIKey)
 }
 
 func (c *Client) GetRecipeInfo(recipeID int) (RecipeInfo, error) {
-	URL := c.FormatRecipeInfoURL(recipeID)
-	resp, err := c.HTTPClient.Get(URL)
-	if err != nil {
-		return RecipeInfo{}, err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode == http.StatusNotFound {
-		return RecipeInfo{}, fmt.Errorf("could not find recipe with ID: %d", recipeID)
-	}
-	if resp.StatusCode != http.StatusOK {
-		return RecipeInfo{}, fmt.Errorf("unexpected response status %q", resp.Status)
-	}
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return RecipeInfo{}, err
-	}
-	recipe_info, err := parseRecipeInfoResponse(data)
-	if err != nil {
-		return RecipeInfo{}, err
-	}
-	return recipe_info, nil
+    URL := c.FormatRecipeInfoURL(recipeID)
+    resp, err := c.HTTPClient.Get(URL)
+    if err != nil {
+        return RecipeInfo{}, err
+    }
+    defer resp.Body.Close()
+    if resp.StatusCode == http.StatusNotFound {
+        return RecipeInfo{}, fmt.Errorf("could not find recipe with ID: %d", recipeID)
+    }
+    if resp.StatusCode != http.StatusOK {
+        return RecipeInfo{}, fmt.Errorf("unexpected response status %q", resp.Status)
+    }
+    data, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return RecipeInfo{}, err
+    }
+    recipeInfo, err := parseRecipeInfoResponse(data)
+    if err != nil {
+        return RecipeInfo{}, err
+    }
+    return recipeInfo, nil
 }
 
 func parseRecipeInfoResponse(data []byte) (RecipeInfo, error) {
@@ -120,4 +119,3 @@ func parseRecipeInfoResponse(data []byte) (RecipeInfo, error) {
     }
     return info, nil
 }
-
