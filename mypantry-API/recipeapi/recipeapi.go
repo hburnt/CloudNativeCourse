@@ -51,7 +51,7 @@ func (c *Client) FormatRecipeSearchURL(search string) string {
     return fmt.Sprintf("%s/recipes/complexSearch?query=%s&number=1&apiKey=%s", c.BaseURL, search, c.APIKey)
 }
 
-func (c *Client) GetRecipe(search string) (RecipeInfo, error) {
+func (c *Client) GetRecipeInfo(search string) (RecipeInfo, error) {
     URL := c.FormatRecipeSearchURL(search)
     resp, err := c.HTTPClient.Get(URL)
     if err != nil {

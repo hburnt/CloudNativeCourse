@@ -8,7 +8,7 @@ import (
     "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/mongo/options"
     "github.com/hburnt/mypantry-API/recipeapi"
-    "github.com/hburnt/MyPantry-API/recipeinfoapi"
+    "github.com/hburnt/mypantry-API/recipeinfoapi"
 )
 
 const mongoURI = "mongodb://127.17.0.2:27017"
