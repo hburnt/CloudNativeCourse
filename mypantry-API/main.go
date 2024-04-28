@@ -6,7 +6,7 @@ import (
     "go.mongodb.org/mongo-driver/bson"
     "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/mongo/options"
-    "github.com/hburnt/recipeapi"
+    "./recipeapi"
 )
 
 const mongoURI = "mongodb://127.17.0.2:27017"
