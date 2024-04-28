@@ -3,10 +3,11 @@ package main
 import (
     "context"
     "log"
-    "go.mongodb.org/mongo-driver/bson"
+    "os"
+  //  "go.mongodb.org/mongo-driver/bson"
     "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/mongo/options"
-    "./recipeapi"
+    "github.com/hburnt/mypantry-API/recipeapi"
 )
 
 const mongoURI = "mongodb://127.17.0.2:27017"

@@ -87,6 +87,7 @@ func parseRecipeResponse(data []byte) (RecipeInfo, error) {
     recipe := resp.Results[0]
 
     info := RecipeInfo{
+        ID:         recipe.ID,
         Title:      "Top Recipe",
         Ingredient: recipe.Title,
     }
