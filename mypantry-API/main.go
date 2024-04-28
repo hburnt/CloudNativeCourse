@@ -8,6 +8,7 @@ import (
     "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/mongo/options"
     "github.com/hburnt/mypantry-API/recipeapi"
+    "github.com/hburnt/MyPantry-API/recipeinfoapi"
 )
 
 const mongoURI = "mongodb://127.17.0.2:27017"
@@ -32,11 +33,11 @@ func main() {
 
     // Query input
     query := "pasta"
-
+    recipeID := 654959 
     // Make API call to get recipe
     recipe, err := apiClient.GetRecipe(query)
     if err != nil {
-        log.Println("Error:", err)
+        log.println("error:", err)
         return
     }
 
@@ -46,5 +47,15 @@ func main() {
         log.Fatal(err)
     }
 
+    collection := client.Database("MyPantryDB").Collection("recipe_info")
+    recipe_info, err := apiClient.GetRecipeInfo(recipeID)
+    if err != nil {
+        log.println("error:", err)
+        return
+    }
+    _, err = collection.InsertOne(context.Background(), recipe_info)
+    if err != nil {
+      log.Fatal(err)
+     }
     log.Println("Recipe inserted successfully.")
 }
