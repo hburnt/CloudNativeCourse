@@ -1,4 +1,4 @@
-module github.com/hburnt/mypantry-API
+module github.com/hburnt/CloudNativeCourse/mypantry-API
 
 go 1.22.1
 
